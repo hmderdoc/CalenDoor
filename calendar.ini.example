@@ -1,0 +1,62 @@
+; ============================================================================
+;  CalenDoor - configuration
+;  Copy this file to "calendar.ini" next to the binary. The door reads it at
+;  launch, so the next caller picks up changes with no BBS restart.
+;  Repo / updates: https://github.com/hmderdoc/CalenDoor
+; ============================================================================
+
+[settings]
+title           = BBS Community Calendar
+week_start      = sunday              ; sunday | monday
+; timezone      = America/New_York    ; IANA name; omit to use the server's local time.
+                                      ; (Each caller can also pick their own zone in the door.)
+refresh_minutes = 15                  ; auto re-fetch feeds every N minutes (0 = manual only)
+telnet_gate     = on                  ; on/off: when an event is NOW and its LOCATION is
+                                      ; telnet://host[:port], let callers hop to that BBS (a TELGATE)
+host            = futureland.today    ; this board's own telnet host; events pointing here show
+                                      ; "HERE NOW" (and a welcome on login) instead of a hop-to-self
+clock_font      = computrx            ; TheDraw font for the splash clock digits (any bundled font)
+
+; ----------------------------------------------------------------------------
+;  Colors / theming (optional)
+;  Names: black red green yellow blue magenta cyan white, their bright* variants,
+;  plus gray/orange/pink/purple/teal/lime. Anything omitted uses a sane default.
+; ----------------------------------------------------------------------------
+[colors]
+; weekday   = cyan          ; Sun..Sat header
+; day       = white         ; day numbers
+; dim       = gray          ; leading/trailing (other-month) days
+; today     = yellow        ; today's highlight
+; title     = yellow        ; month/year header (fallback when no per-month color)
+; border    = blue          ; grid lines (fallback)
+; hint_key  = brightyellow  ; footer keys
+; hint_text = white         ; footer descriptions
+; clock     = cyan          ; startup LCD clock hue (cyan, lightred, green, yellow, amber, ...)
+; Per-month accent for the title + grid (Jan..Dec) - one color per month:
+; months    = cyan,magenta,green,yellow,green,cyan,red,yellow,orange,red,orange,blue
+
+; ============================================================================
+;  Calendars - one [calendar] section per source.
+;  "url" is a PUBLIC iCalendar (.ics) feed (the door is READ-ONLY: you create and
+;  edit events in the calendar service, the door just subscribes and displays):
+;    Google : Calendar settings -> "Integrate calendar" -> "Secret address in
+;             iCal format" (or "Public address" if the calendar is public).
+;    iCloud : share a calendar Public -> copy the webcal:// link (works as-is).
+;    Outlook: calendar settings -> Publish -> ICS link.
+;  "color" (cyan green yellow magenta blue red white, auto-assigned if omitted)
+;  color-codes the calendar across every view; press C in the door to cycle/filter.
+;
+;  SHARE YOURS: this list is meant to be shared. If you run a board and want other
+;  sysops to be able to subscribe to your events, open a PR adding your [calendar]
+;  block to calendar.ini.example - see "Sharing your calendar" in the README.
+; ============================================================================
+
+[calendar]
+name  = BBS Events
+url   = https://calendar.google.com/calendar/ical/cfc36f58dc49f9f925b4c4f89756a87b22993490022107916c8b03d211582de6%40group.calendar.google.com/public/basic.ics
+color = red
+
+[calendar]
+name  = US Holidays
+url   = https://calendar.google.com/calendar/ical/en.usa%23holiday%40group.v.calendar.google.com/public/basic.ics
+color = green

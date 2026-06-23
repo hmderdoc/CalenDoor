@@ -1,0 +1,17 @@
+# Build artifacts (anchored: the binary is /calendoor, but cmd/calendoor/ is source)
+/calendoor
+/calender
+
+# Local runtime config & data (the example is committed; the live copy is not)
+/calendar.ini
+/calender.ini
+/data/
+
+# Logs
+*.log
+
+# Scratch / planning notes
+/plan.md
+
+# OS cruft
+.DS_Store
