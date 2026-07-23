@@ -27,19 +27,19 @@ const (
 )
 
 type app struct {
-	cfg      config
-	sysCals  []Calendar // system calendars (from the ini); cfg.Calendars = these + the caller's personal feeds
-	events   []Event
-	loadErrs []string
-	view     viewMode
-	focus    time.Time // selected day
-	today    time.Time
-	winFrom  time.Time
-	winTo    time.Time
-	upSel    int  // selected row in the upcoming list
-	calFilter int // -1 = show all calendars; else index into cfg.Calendars (cycled with C)
-	gen      int  // bumped on every (re)load; async results from an older gen are discarded
-	loading  bool // a background refresh is in flight
+	cfg       config
+	sysCals   []Calendar // system calendars (from the ini); cfg.Calendars = these + the caller's personal feeds
+	events    []Event
+	loadErrs  []string
+	view      viewMode
+	focus     time.Time // selected day
+	today     time.Time
+	winFrom   time.Time
+	winTo     time.Time
+	upSel     int  // selected row in the upcoming list
+	calFilter int  // -1 = show all calendars; else index into cfg.Calendars (cycled with C)
+	gen       int  // bumped on every (re)load; async results from an older gen are discarded
+	loading   bool // a background refresh is in flight
 }
 
 // visibleEvents applies the calendar filter (C cycles through them): all events
@@ -114,6 +114,8 @@ func main() {
 	logf("=== calendar door start: args=%v pid=%d ===", os.Args, os.Getpid())
 
 	dropfile := os.Getenv("CALENDAR_DROPFILE")
+	statusPath := ""
+	statusHandle := "guest"
 	if dropfile == "" {
 		dropfile = "DOOR32.SYS"
 	}
@@ -125,7 +127,24 @@ func main() {
 			dropfile = os.Args[i]
 		case strings.HasPrefix(a, "-dropfile="):
 			dropfile = a[len("-dropfile="):]
+		case a == "-status-json" && i+1 < len(os.Args):
+			i++
+			statusPath = os.Args[i]
+		case strings.HasPrefix(a, "-status-json="):
+			statusPath = a[len("-status-json="):]
+		case a == "-handle" && i+1 < len(os.Args):
+			i++
+			statusHandle = os.Args[i]
+		case strings.HasPrefix(a, "-handle="):
+			statusHandle = a[len("-handle="):]
 		}
+	}
+	if statusPath != "" {
+		if err := writeTileStatus(statusPath, statusHandle); err != nil {
+			logf("tile status: %v", err)
+			os.Exit(1)
+		}
+		return
 	}
 
 	term, restore, err := openTerm(dropfile)
@@ -382,7 +401,7 @@ func (a *app) handleKey(k key, cols, rows *int, term Term) bool {
 		case 'c':
 			a.cycleCalFilter()
 			return false
-		// 'r' (refresh) is handled in the main loop so it can run in the background
+			// 'r' (refresh) is handled in the main loop so it can run in the background
 		}
 	}
 
