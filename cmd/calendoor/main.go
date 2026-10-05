@@ -168,7 +168,6 @@ func main() {
 	}
 	logf("terminal %dx%d", cols, rows)
 
-	restore()
 	defer restore()
 	w := bufio.NewWriterSize(term, 32*1024)
 	hideCursor(w)
