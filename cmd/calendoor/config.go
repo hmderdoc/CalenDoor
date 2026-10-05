@@ -115,7 +115,7 @@ func loadConfig(path string) config {
 			}
 			switch k {
 			case "name":
-				cur.Name = v
+				cur.Name = toCP437Line(v)
 			case "url":
 				cur.URL = v
 			case "color":
@@ -134,7 +134,7 @@ func loadConfig(path string) config {
 					logf("config: bad timezone %q: %v", v, err)
 				}
 			case "title":
-				cfg.Title = v
+				cfg.Title = toCP437Line(v)
 			case "host", "this_host":
 				cfg.Host = v
 			case "clock_font":

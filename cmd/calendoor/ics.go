@@ -110,11 +110,11 @@ func parseICS(data []byte, calIdx int, loc *time.Location) []Event {
 					dur, hasDur = d, true
 				}
 			case "SUMMARY":
-				cur.Summary = unescapeText(val)
+				cur.Summary = toCP437Line(unescapeText(val))
 			case "LOCATION":
-				cur.Location = unescapeText(val)
+				cur.Location = toCP437Line(unescapeText(val))
 			case "DESCRIPTION":
-				cur.Desc = unescapeText(val)
+				cur.Desc = toCP437(unescapeText(val))
 			case "UID":
 				cur.UID = val
 			case "RRULE":
